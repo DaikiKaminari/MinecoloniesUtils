@@ -16,7 +16,7 @@ end
 
 local function main()
     local visitors_infos = visitors.getSkillsAndCost(colony)
-    for name, infos in visitors_infos do
+    for name, infos in pairs(visitors_infos) do
         print("--- " .. name .. " ---")
         print(infos)
         print()
