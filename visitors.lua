@@ -41,7 +41,7 @@ local function notifyPlayers(chatbox, visitor_id, skill_name, skill_level, visit
         chatbox.sendMessageToPlayer(msg, player)
         sleep(1)
     end
-    table.insert(id_notified_visitors, visitor_id)
+    id_notified_visitors[#id_notified_visitors] = visitor_id
 end
 
 -- returns a table associating a visitor name and a string of his skills and cost
@@ -56,8 +56,8 @@ local function getSkillsAndCost(colony, chatbox)
         for skill_name, values in pairs(visitor["skills"]) do
             skill_level_list[skill_name] = values["level"]
             list[#list+1] = skill_name
-            if skill_level_list[list[1]] >= notify_level then
-                notifyPlayers(chatbox, visitor_id, skill_name, values["level"], visitor["name"], visitor["cost"]["displayName"], visitor["cost"]["count"], visitor["location"])
+            if values["level"] >= notify_level then
+                notifyPlayers(chatbox, visitor["id"], skill_name, values["level"], visitor["name"], visitor["cost"]["displayName"], visitor["cost"]["count"], visitor["location"])
             end
         end
         table.sort(list, byval)
