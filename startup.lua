@@ -6,16 +6,19 @@ local colony -- colony peripheral
 local monitors = {} -- monitors peripherals
 
 local function init()
+    term.clear()
     colony = peripheral.find("colony")
     assert(colony, "No colony peripheral found.")
     local names = peripheral.getNames()
+    local m
     for _,name in ipairs(names) do
         if string.sub(name, 1, 7) == "monitor" then
-            table.insert(monitors, peripheral.wrap(name))
+            m = peripheral.wrap(name)
+            table.insert(monitors, m)
+            m.setTextScale(0.5)
         end
     end
     print(tostring(#monitors) .. " monitor(s) detected.")
-    term.setTextScale(0.5)
 end
 
 local function displayVisitors()
