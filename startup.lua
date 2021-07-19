@@ -14,7 +14,7 @@ local function init()
     term.clear()
     colony = peripheral.find("colony")
     assert(colony, "No colony peripheral found.")
-    chatbox = peripheral.wrap("chatbox_side")
+    chatbox = peripheral.wrap(chatbox_side)
     if not chatbox then
         print("Warning : no chatbox peripheral found on side " .. chatbox_side)
     end

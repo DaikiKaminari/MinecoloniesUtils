@@ -5,10 +5,11 @@ local v = {}
 local skill_level_list = {}
 local min_level = 30 -- filters visitors minimum best skill level to be selected
 local notify_level = 45 -- visitors with high levels will be notified by private message to a list of users
-local players_to_notify = {
+local players_to_notify = { -- players to notify when a high stat visitor is here
     "Ciliste",
     "DaikiKaminari"
 }
+local id_notified_visitors = {} -- keep track of already notified visitors to avoid chat spamming
 
 --- METHODS UTILS ----
 local function superior(a, b)
@@ -19,16 +20,28 @@ local function byval(a, b)
     return skill_level_list[a] > skill_level_list[b]
 end
 
+local function contains(table, value)
+    for _, v in pairs(table) do
+        if value == v then
+            return true
+        end
+    end
+    return false
+end
+
 
 --- METHODS ----
 -- notify a list of players of the presence of a visitor
-local function notifyPlayers(chatbox, skill_name, skill_level, visitor_name, cost_resource, cost_number, coords)
-    local msg = "Visitor [" .. visitor_name .. "] is LVL " .. tostring(skill_levelà .. " in " .. skill_name .. ".\n"
-    msg = msg .. "Cost : " .. tostring(cost_number) .. " " .. cost_resource .. "."
-    msg = msg .. "Coord : " .. tostring(coords["x"]) .. " " .. tostring(coords["y"]) .. " " .. tostring(coords["z"])
-    for _, player in players_to_notify do
+local function notifyPlayers(chatbox, visitor_id, skill_name, skill_level, visitor_name, cost_resource, cost_number, coords)
+    if contains(id_notified_visitors, visitor_id) then return end
+    local msg = "Visitor [" .. visitor_name .. "] is LVL " .. tostring(skill_level) .. " in " .. skill_name .. ".\n"
+    msg = msg .. "Cost : " .. tostring(cost_number) .. " " .. cost_resource .. ". "
+    msg = msg .. "Coords : " .. tostring(coords["x"]) .. " " .. tostring(coords["y"]) .. " " .. tostring(coords["z"])
+    for _, player in pairs(players_to_notify) do
         chatbox.sendMessageToPlayer(msg, player)
+        sleep(1)
     end
+    table.insert(id_notified_visitors, visitor_id)
 end
 
 -- returns a table associating a visitor name and a string of his skills and cost
@@ -44,7 +57,7 @@ local function getSkillsAndCost(colony, chatbox)
             skill_level_list[skill_name] = values["level"]
             list[#list+1] = skill_name
             if skill_level_list[list[1]] >= notify_level then
-                notifyPlayers(chatbox, skill_name, values["level"], visitor["name"], visitor["cost"]["displayName"], visitor["cost"]["count"], visitor["location"])
+                notifyPlayers(chatbox, visitor_id, skill_name, values["level"], visitor["name"], visitor["cost"]["displayName"], visitor["cost"]["count"], visitor["location"])
             end
         end
         table.sort(list, byval)
