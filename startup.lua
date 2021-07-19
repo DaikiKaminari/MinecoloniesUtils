@@ -4,6 +4,7 @@ local visitors = require("visitors")
 --- GLOBAL VARIABLES ---
 local colony -- colony peripheral
 local monitors = {} -- monitors peripherals
+local seconds -- refresh rate
 
 local function init()
     term.clear()
@@ -22,6 +23,10 @@ local function init()
 end
 
 local function displayVisitors()
+    for _, monitor in ipairs(monitors) do
+        monitor.clear()
+    end
+
     local visitors_infos = visitors.getSkillsAndCost(colony)
     local i = 1
     for name, infos in pairs(visitors_infos) do
@@ -39,7 +44,10 @@ local function displayVisitors()
 end
 
 local function main()
-    displayVisitors()
+    while true do
+        sleep(seconds) -- actualize every X seconds
+        displayVisitors()
+    end
 end
 
 init()
