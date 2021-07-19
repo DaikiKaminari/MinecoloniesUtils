@@ -29,7 +29,7 @@ local function getSkillsAndCost(colony)
         end
         table.sort(list, byval)
         for k=1, #list do
-            infos = infos .. list[k] ..  string.rep(" ", 12-string.len(skill_level_list[list[k]])) .. "->   " .. tostring(skill_level_list[list[k]]) .. "\n"
+            infos = infos .. list[k] ..  string.rep(" ", 13-string.len(list[k])) .. "-> " .. tostring(skill_level_list[list[k]]) .. "\n"
         end
         visitorsSkills[visitor["name"]] = infos
     end
