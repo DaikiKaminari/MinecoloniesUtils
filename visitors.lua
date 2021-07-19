@@ -1,6 +1,10 @@
 --- LOADING LIBS ---
 local v = {}
 
+local function superior(a, b)
+    return a > b
+end
+
 -- returns a table associating a visitor name and a string of his skills and cost
 local function getSkillsAndCost(colony)
     local visitorsSkills = {}
@@ -12,7 +16,7 @@ local function getSkillsAndCost(colony)
         for skill_name, values in pairs(visitor["skills"]) do
             reversed_table[values["level"]] = skill_name
         end
-        reversed_table.sort()
+        table.sort(reversed_table, superior)
         for level, skill_name in pairs(reversed_table) do
             infos = infos .. skill_name .. " : " .. string.rep(" ", 16-string.len(skill_name)) .. tostring(level) .. "\n"
         end
