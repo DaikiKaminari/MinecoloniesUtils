@@ -1,10 +1,20 @@
 --- LOADING LIBS ---
 local v = {}
 
+--- GLOBAL VARIABLES ---
+local skill_level_list = {}
+
+--- METHODS UTILS ----
 local function superior(a, b)
     return a > b
 end
 
+local function byval(a, b)
+    return skill_level_list[a] > skill_level_list[b]
+end
+
+
+--- METHODS ----
 -- returns a table associating a visitor name and a string of his skills and cost
 local function getSkillsAndCost(colony)
     local visitorsSkills = {}
@@ -12,13 +22,14 @@ local function getSkillsAndCost(colony)
     local visitors = colony.getVisitors()
     for _, visitor in pairs(visitors) do
         infos = "Cost : " .. visitor["cost"]["displayName"] .. " (" .. tostring(visitor["cost"]["count"]) ..")\n"
-        local reversed_table = {}
+        local list = {}
         for skill_name, values in pairs(visitor["skills"]) do
-            reversed_table[values["level"]] = skill_name
+            skill_level_list[skill_name] = values["level"]
+            list[#list+1] = skill_name
         end
-        table.sort(reversed_table, superior)
-        for level, skill_name in pairs(reversed_table) do
-            infos = infos .. skill_name .. " : " .. string.rep(" ", 16-string.len(skill_name)) .. tostring(level) .. "\n"
+        table.sort(list, byval)
+        for k=1, #list do
+            infos = infos .. list[k] ..  string.rep(" ", 12-string.len(skill_level_list[list[k]])) .. "->   " .. tostring(skill_level_list[list[k]]) .. "\n"
         end
         visitorsSkills[visitor["name"]] = infos
     end
