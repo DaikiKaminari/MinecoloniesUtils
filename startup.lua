@@ -23,10 +23,6 @@ local function init()
 end
 
 local function displayVisitors()
-    for _, monitor in ipairs(monitors) do
-        monitor.clear()
-    end
-
     local visitors_infos = visitors.getSkillsAndCost(colony)
     local i = 1
     for name, infos in pairs(visitors_infos) do
@@ -45,8 +41,11 @@ end
 
 local function main()
     while true do
-        sleep(seconds) -- actualize every X seconds
+        for _, monitor in ipairs(monitors) do
+            monitor.clear()
+        end
         displayVisitors()
+        sleep(seconds) -- actualize every X seconds
     end
 end
 
