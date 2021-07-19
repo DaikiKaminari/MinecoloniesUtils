@@ -3,6 +3,7 @@ local v = {}
 
 --- GLOBAL VARIABLES ---
 local skill_level_list = {}
+local min_level = 30 -- filters visitors minimum best skill level to be selected
 
 --- METHODS UTILS ----
 local function superior(a, b)
@@ -22,6 +23,7 @@ local function getSkillsAndCost(colony)
     local visitors = colony.getVisitors()
     for _, visitor in pairs(visitors) do
         infos = "Cost : " .. visitor["cost"]["displayName"] .. " (" .. tostring(visitor["cost"]["count"]) ..")\n\n"
+        infos = "Coords :\n" .. tostring(visitor["location"]["x"]) .. " ".. tostring(visitor["location"]["y"]) .. " " .. tostring(visitor["location"]["z"]) .. "\n\n"
         local list = {}
         for skill_name, values in pairs(visitor["skills"]) do
             skill_level_list[skill_name] = values["level"]
@@ -31,7 +33,9 @@ local function getSkillsAndCost(colony)
         for k=1, #list do
             infos = infos .. list[k] ..  string.rep(" ", 13-string.len(list[k])) .. tostring(skill_level_list[list[k]]) .. "\n"
         end
-        visitorsSkills[visitor["name"]] = infos
+        if skill_level_list[list[1]] >= min_level then
+            visitorsSkills[visitor["name"]] = infos
+        end
     end
     return visitorsSkills
 end
