@@ -3,32 +3,37 @@ local visitors = require("visitors")
 
 --- GLOBAL VARIABLES ---
 local colony -- colony peripheral
-local monitors -- monitors peripherals
+local monitors = {} -- monitors peripherals
 
 local function init()
     colony = peripheral.find("colony")
     assert(colony, "No colony peripheral found.")
     local names = peripheral.getNames()
-    for _,name in ipairs(peripheral) do
+    for _,name in ipairs(names) do
         if string.sub(name, 1, 7) == "monitor" then
-            monitors[#monitors+1] = peripheral.wrap(name)
+            table.insert(monitors, peripheral.wrap(name))
         end
     end
-    print(tostring(#monitors) .. " monitors detected.")
+    print(tostring(#monitors) .. " monitor(s) detected.")
 end
 
 local function main()
-    for m in monitors do
+    for _, m in ipairs(monitors) do
         m.clear()
+        m.setCursorPos(1, 1)
+        m.setTextScale(0.5)
     end
 
     local visitors_infos = visitors.getSkillsAndCost(colony)
     local i = 1
     for name, infos in pairs(visitors_infos) do
-        monitors[i].write("--- " .. name .. " ---" .. "\n" .. infos)
+        term.redirect(monitors[i])
+        print("--- " .. name .. " ---" .. "\n" .. infos)
         i = i + 1
         if i > #monitors then
+            term.redirect(term.native())
             print("Warning : not enough monitors to display all visitors.")
+            i = 1
         end
     end
 end
