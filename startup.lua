@@ -15,27 +15,28 @@ local function init()
         end
     end
     print(tostring(#monitors) .. " monitor(s) detected.")
+    term.setTextScale(0.5)
 end
 
-local function main()
-    for _, m in ipairs(monitors) do
-        m.clear()
-        m.setCursorPos(1, 1)
-        m.setTextScale(0.5)
-    end
-
+local function displayVisitors()
     local visitors_infos = visitors.getSkillsAndCost(colony)
     local i = 1
     for name, infos in pairs(visitors_infos) do
         term.redirect(monitors[i])
-        print("--- " .. name .. " ---" .. "\n" .. infos)
+        term.clear()
+
+        print(name .. "\n\n" .. infos)
         i = i + 1
         if i > #monitors then
             term.redirect(term.native())
             print("Warning : not enough monitors to display all visitors.")
-            i = 1
+            return
         end
     end
+end
+
+local function main()
+    displayVisitors()
 end
 
 init()
