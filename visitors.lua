@@ -23,7 +23,7 @@ local function getSkillsAndCost(colony)
     local visitors = colony.getVisitors()
     for _, visitor in pairs(visitors) do
         infos = "Cost : " .. visitor["cost"]["displayName"] .. " (" .. tostring(visitor["cost"]["count"]) ..")\n\n"
-        infos = "Coords :\n" .. tostring(visitor["location"]["x"]) .. " ".. tostring(visitor["location"]["y"]) .. " " .. tostring(visitor["location"]["z"]) .. "\n\n"
+        infos = infos .. "Coords :\n" .. tostring(visitor["location"]["x"]) .. " ".. tostring(visitor["location"]["y"]) .. " " .. tostring(visitor["location"]["z"]) .. "\n\n"
         local list = {}
         for skill_name, values in pairs(visitor["skills"]) do
             skill_level_list[skill_name] = values["level"]

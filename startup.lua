@@ -4,7 +4,7 @@ local visitors = require("visitors")
 --- GLOBAL VARIABLES ---
 local colony -- colony peripheral
 local monitors = {} -- monitors peripherals
-local seconds -- refresh rate
+local seconds = 10 -- refresh rate
 
 local function init()
     term.clear()
