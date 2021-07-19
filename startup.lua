@@ -3,13 +3,21 @@ local visitors = require("visitors")
 
 --- GLOBAL VARIABLES ---
 local colony -- colony peripheral
+local chatbox -- chatbox peripheral
+local chatbox_side = "left" -- side where the sidebox is
 local monitors = {} -- monitors peripherals
 local seconds = 10 -- refresh rate
 
+
+--- INIT ---
 local function init()
     term.clear()
     colony = peripheral.find("colony")
     assert(colony, "No colony peripheral found.")
+    chatbox = peripheral.wrap("chatbox_side")
+    if not chatbox then
+        print("Warning : no chatbox peripheral found on side " .. chatbox_side)
+    end
     local names = peripheral.getNames()
     local m
     for _,name in ipairs(names) do
@@ -22,8 +30,9 @@ local function init()
     print(tostring(#monitors) .. " monitor(s) detected.")
 end
 
+--- METHODS ---
 local function displayVisitors()
-    local visitors_infos = visitors.getSkillsAndCost(colony)
+    local visitors_infos = visitors.getSkillsAndCost(colony, chatbox)
     local i = 1
     for name, infos in pairs(visitors_infos) do
         term.redirect(monitors[i])
@@ -39,6 +48,7 @@ local function displayVisitors()
     end
 end
 
+--- MAIN CALL ---
 local function main()
     while true do
         for _, monitor in ipairs(monitors) do
