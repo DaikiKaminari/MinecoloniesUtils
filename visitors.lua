@@ -41,7 +41,7 @@ local function notifyPlayers(chatbox, visitor_id, skill_name, skill_level, visit
         chatbox.sendMessageToPlayer(msg, player)
         sleep(1)
     end
-    id_notified_visitors[#id_notified_visitors] = visitor_id
+    id_notified_visitors[#id_notified_visitors+1] = visitor_id
 end
 
 -- returns a table associating a visitor name and a string of his skills and cost
