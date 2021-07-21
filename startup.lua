@@ -31,8 +31,7 @@ local function init()
 end
 
 --- METHODS ---
-local function displayVisitors()
-    local visitors_infos = visitors.getSkillsAndCost(colony, chatbox)
+local function displayVisitors(visitors_infos)
     local i = 1
     for name, infos in pairs(visitors_infos) do
         term.redirect(monitors[i])
@@ -54,7 +53,10 @@ local function main()
         for _, monitor in ipairs(monitors) do
             monitor.clear()
         end
-        displayVisitors()
+        local visitors_infos = visitors.getSkillsAndCost(colony, chatbox)
+        if monitors[1] then -- if we have at least 1 monitor
+            displayVisitors(visitors_infos)
+        end
         sleep(seconds) -- actualize every X seconds
     end
 end
